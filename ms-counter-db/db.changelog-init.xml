@@ -1,0 +1,38 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="create-sequence-word-changelog" author="anton_belousov">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="word_changelog_seq"></sequenceExists>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="word_changelog_seq" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="create-table-word" author="anton_belousov">
+        <preConditions>
+            <not>
+                <tableExists tableName="word"></tableExists>
+            </not>
+        </preConditions>
+        <createTable tableName="word" remarks="Таблица с посчитанными словами">
+            <column name="id" type="bigint" defaultValueSequenceNext="word_changelog_seq"
+                remarks="ИД записи в локальной БД">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="sys_create_date" type="timestamptz" remarks="Дата создания в локальной БД">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="varchar(255)" remarks="Текст фразы">
+                <constraints nullable="false"/>
+            </column>
+            <column name="count" type="bigint" remarks="Количество слов">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

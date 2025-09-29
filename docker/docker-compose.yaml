@@ -1,0 +1,72 @@
+version: '3.8'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    #    image: confluentinc/cp-zookeeper:7.0.1
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    #Добавил
+    #    environment:
+    #      ZOOKEEPER_CLIENT_PORT: 2181
+    #      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - kafka-net
+  kafka:
+    image: wurstmeister/kafka
+    #    image: confluentinc/cp-kafka:7.0.1
+    #Добавил
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    #Добавил
+    #    expose:
+    #      - '29092'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      #      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      #      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      #      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      #Добавил
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_BROKER_ID: 1
+    networks:
+      - kafka-net
+#  kafka-ui:
+#    container_name: kafka-ui
+#    image: provectuslabs/kafka-ui:latest
+#    #    image: provectuslabs/kafka-ui
+#    ports:
+#      - "8080:8080"
+#    #Добавил
+#    restart: always
+#    environment:
+#      KAFKA_CLUSTERS_0_NAME: local
+#      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+#      #      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+#      #Добавил
+#      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+#    depends_on:
+#      - kafka
+#    networks:
+#      - kafka-net
+  postgres:
+    ports:
+      - "5432:5432"
+    image: postgres:11
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: word_counter
+      TZ: Europe/Moscow
+networks:
+  kafka-net:
+    driver: bridge
