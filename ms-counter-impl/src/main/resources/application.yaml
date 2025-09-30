@@ -10,7 +10,22 @@ spring:
       group-id: my-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: com.lanit.edp.deserializer.CustomDeserializer
-      heartbeat-interval-ms: '6000'
+      #Частота отправки heartbeat-сигналов брокеру (мс).
+      heartbeat-interval-ms: '3000'
+      #Максимальное время между вызовами poll() до исключения из группы (мс).
+      max.poll.interval.ms: '300000'
+      #Максимальный объём данных, который сервер должен вернуть в ответ на запрос выборки | max.partition.fetch.bytes
+      fetch.max.bytes: 52428800
+      #Тайм-аут, используемый для обнаружения сбоев клиента при использовании механизма управления группами Kafka.
+      #Клиент периодически отправляет брокеру сигналы работоспособности, чтобы подтвердить свою работоспособность.
+      #Если брокер не получает сигналы работоспособности до истечения этого тайм-аута сеанса, брокер удаляет клиента из
+      #группы и инициирует перебалансировку
+      session.timeout.ms: '45000'
+      #Конфигурация определяет максимальное время ожидания клиентом ответа на запрос. Если ответ не получен до истечения
+      #времени ожидания, клиент при необходимости повторно отправит запрос или отменит его, если количество попыток исчерпано
+      request.timeout.ms: '30000'
+      #Паралеллизм Назначает разделы потребителям по принципу циклического распределения
+      partition.assignment.strategy: org.apache.kafka.clients.consumer.RoundRobinAssignor
 
   datasource:
     url: jdbc:postgresql://localhost:5432/counter
