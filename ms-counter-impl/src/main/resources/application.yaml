@@ -9,7 +9,7 @@ spring:
       enable-auto-commit: true
       group-id: my-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: com.lanit.edp.deserializer.CustomDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       #Частота отправки heartbeat-сигналов брокеру (мс).
       heartbeat-interval-ms: '3000'
       #Максимальное время между вызовами poll() до исключения из группы (мс).
@@ -26,6 +26,8 @@ spring:
       request.timeout.ms: '30000'
       #Паралеллизм Назначает разделы потребителям по принципу циклического распределения
       partition.assignment.strategy: org.apache.kafka.clients.consumer.RoundRobinAssignor
+      properties:
+        spring.json.trusted.packages: "*"
 
   datasource:
     url: jdbc:postgresql://localhost:5432/counter

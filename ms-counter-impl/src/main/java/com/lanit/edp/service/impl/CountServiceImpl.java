@@ -1,6 +1,6 @@
 package com.lanit.edp.service.impl;
 
-import com.lanit.edp.dto.PhraseDto;
+import com.lanit.edp.wordcounter.dto.Phrase;
 import com.lanit.edp.service.CountService;
 import java.util.Arrays;
 import org.springframework.stereotype.Service;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 public class CountServiceImpl implements CountService {
 
   @Override
-  public Long count(PhraseDto phraseDto) {
-    String text = phraseDto.getText();
+  public Long count(Phrase phrase) {
+    String text = phrase.getText();
     Long count = Arrays.stream(text.split(" ")).count();
 
     return count;

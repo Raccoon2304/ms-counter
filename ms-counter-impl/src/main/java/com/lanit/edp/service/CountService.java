@@ -1,9 +1,9 @@
 package com.lanit.edp.service;
 
-import com.lanit.edp.dto.PhraseDto;
+import com.lanit.edp.wordcounter.dto.Phrase;
 
 public interface CountService {
 
-  Long count(PhraseDto phraseDto);
+  Long count(Phrase phrase);
 
 }
